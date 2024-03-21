@@ -1,0 +1,44 @@
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+int main() {
+	FILE* file1, *file2;
+	char name[20], name2[] = "file2", line[10];
+	int quantity = 0, intline, intline2;
+	puts("Input the name of new file:");
+	gets_s(name);
+	file1 = fopen(name, "w+b");
+	file2 = fopen(name2, "w+b");
+	puts("Input the value or ENTER:");
+	while ((gets_s(line), strlen(line) != 0) || (quantity % 2 != 0)) {
+		if (strlen(line) == 0) {
+			do {
+				puts("Input an another one value:");
+				gets_s(line);
+			} while (strlen(line) == 0);
+			intline = atoi(line);
+			fwrite(&intline, sizeof(intline), 1, file1);
+		}
+		else {
+			intline = atoi(line);
+			fwrite(&intline, sizeof(intline), 1, file1);
+		}
+		intline2 = intline * 2 + 1;
+		fwrite(&intline2, sizeof(intline2), 1, file2);
+		quantity++;
+	}
+	rewind(file1);
+	rewind(file2);
+	printf("---------------%s---------------\n", name);
+	while (fread(&intline, sizeof(intline), 1, file1) != NULL) {
+		printf("%5d", intline);
+	}
+	printf("\n---------------%s---------------\n", name2);
+	while (fread(&intline2, sizeof(intline2), 1, file2) != NULL) {
+		printf("%5d", intline2);
+	}
+	fcloseall();
+	remove(name);
+	remove(name2);
+}
